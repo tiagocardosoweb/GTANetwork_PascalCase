@@ -52,18 +52,9 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="tfInPath" min="-2" pref="297" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btnInput" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="tfOutPath" min="-2" pref="297" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btnOutput" pref="85" max="32767" attributes="0"/>
-                              </Group>
-                          </Group>
+                          <Component id="tfInPath" min="-2" pref="297" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btnInput" pref="85" max="32767" attributes="0"/>
                       </Group>
                       <Component id="btnConvert" alignment="0" max="32767" attributes="0"/>
                   </Group>
@@ -79,12 +70,7 @@
                       <Component id="tfInPath" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnInput" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="tfOutPath" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnOutput" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="btnConvert" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -113,19 +99,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnInputActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="tfOutPath">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnOutput">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Output"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOutputActionPerformed"/>
-          </Events>
-        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -140,7 +113,7 @@
             <Property name="editable" type="boolean" value="false"/>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
-            <Property name="text" type="java.lang.String" value="Steps: (only .cs files are converted)&#xa;- Select your Gamemode folder.&#xa;- Select a folder for the output.&#xa;- Enjoy&#xa;&#xa;&#xa;Remember:&#xa;- Always backup your files.&#xa;- If you find bugs, report them to StreetGT"/>
+            <Property name="text" type="java.lang.String" value="Steps: (only .cs files are converted)&#xa;- Select your gamemode folder.&#xa;- Convertion goes into YourInputPath/convertion&#xa;- Enjoy&#xa;&#xa;&#xa;Remember:&#xa;- Always backup your files.&#xa;- If you find bugs, report them to StreetGT"/>
           </Properties>
         </Component>
       </SubComponents>

@@ -52,8 +52,6 @@ public class AppMain extends javax.swing.JFrame {
         btnConvert = new javax.swing.JButton();
         tfInPath = new javax.swing.JTextField();
         btnInput = new javax.swing.JButton();
-        tfOutPath = new javax.swing.JTextField();
-        btnOutput = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtLog = new javax.swing.JTextArea();
 
@@ -75,15 +73,6 @@ public class AppMain extends javax.swing.JFrame {
             }
         });
 
-        tfOutPath.setEditable(false);
-
-        btnOutput.setText("Output");
-        btnOutput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOutputActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -92,15 +81,9 @@ public class AppMain extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tfInPath, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tfOutPath, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE))))
+                        .addComponent(tfInPath, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnInput, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE))
                     .addComponent(btnConvert, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -112,10 +95,6 @@ public class AppMain extends javax.swing.JFrame {
                     .addComponent(tfInPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnInput))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tfOutPath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnOutput))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnConvert)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -123,7 +102,7 @@ public class AppMain extends javax.swing.JFrame {
         txtLog.setEditable(false);
         txtLog.setColumns(20);
         txtLog.setRows(5);
-        txtLog.setText("Steps: (only .cs files are converted)\n- Select your Gamemode folder.\n- Select a folder for the output.\n- Enjoy\n\n\nRemember:\n- Always backup your files.\n- If you find bugs, report them to StreetGT");
+        txtLog.setText("Steps: (only .cs files are converted)\n- Select your gamemode folder.\n- Convertion goes into YourInputPath/convertion\n- Enjoy\n\n\nRemember:\n- Always backup your files.\n- If you find bugs, report them to StreetGT");
         jScrollPane1.setViewportView(txtLog);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -149,27 +128,29 @@ public class AppMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnConvertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConvertActionPerformed
-
-        txtLog.setText("");
         
         if(tfInPath.getText().length() == 0) {
             JOptionPane.showMessageDialog(null, "Please specify your input path.", "Hey, I got news for you", JOptionPane.OK_OPTION);
             return;
         }
         
-        if(tfOutPath.getText().length() == 0) {
-            JOptionPane.showMessageDialog(null, "Please specify your output path.", "Hey, I got news for you", JOptionPane.OK_OPTION);
-            return;
-        }
+        txtLog.setText("");
         
         ArrayList<File> toConvert = new ArrayList<>();
         findCSharpFiles(toConvert, tfInPath.getText());
         System.out.println("Files found: " + toConvert.size());
         
+        String convertionDir = tfInPath.getText() + "/convertion";
+        File f = new File(convertionDir);
+        if(f.exists() && f.isDirectory()) {
+            deleteDir(f);
+        }
+        
         for (File file : toConvert) {
             txtLog.append("Converting: " + file.getAbsolutePath() + "\n");
             try {
-                String outputFilePath = tfOutPath.getText() + file.getAbsolutePath().substring(tfInPath.getText().length());
+                 
+                String outputFilePath =  convertionDir + file.getAbsolutePath().substring(tfInPath.getText().length());
                 System.out.println(outputFilePath);
                 File outputFile = new File(outputFilePath);
                 File parent = outputFile.getParentFile();
@@ -185,7 +166,6 @@ public class AppMain extends javax.swing.JFrame {
                         bw.write(line);
                         bw.newLine();
                         bw.flush();
-                        //System.out.println(line);
                 }
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(AppMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -203,6 +183,7 @@ public class AppMain extends javax.swing.JFrame {
     private void btnInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInputActionPerformed
 
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         if (fileChooser.showOpenDialog(null) != 1) {
            File arquivo = fileChooser.getSelectedFile();
            tfInPath.setText(arquivo.getPath());
@@ -210,14 +191,16 @@ public class AppMain extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnInputActionPerformed
 
-    private void btnOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOutputActionPerformed
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        if (fileChooser.showOpenDialog(null) != 1) {
-           File arquivo = fileChooser.getSelectedFile();
-           tfOutPath.setText(arquivo.getPath());
+    private void deleteDir(File dir) {
+        File[] files = dir.listFiles();
+        for (File myFile: files) {
+            if (myFile.isDirectory()) {  
+                deleteDir(myFile);
+            } 
+            myFile.delete();
         }
-    }//GEN-LAST:event_btnOutputActionPerformed
-
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -262,7 +245,7 @@ public class AppMain extends javax.swing.JFrame {
         if (list == null) return null;
 
         for ( File f : list ) {
-            if ( f.isDirectory() ) {
+            if ( f.isDirectory() && !f.getAbsolutePath().contains("/convertion")) {
                 findCSharpFiles(files, f.getAbsolutePath() );
             }
             else {
@@ -276,12 +259,18 @@ public class AppMain extends javax.swing.JFrame {
     }
     
     private String convertLineToPascalCase(String line) {
-        Pattern p = Pattern.compile("(API\\.[^(]*)");
+        Pattern p = Pattern.compile("(API.[^(]*)");
         Matcher m = p.matcher(line);
         StringBuffer sb = new StringBuffer();
         while (m.find()) {
             String group = m.group(0);
-            m.appendReplacement(sb, group.substring(0,4) + Character.toUpperCase(group.charAt(4)) + group.substring(5));
+            System.out.println(group);
+            
+            if(group.contains(".shared.")) {
+                m.appendReplacement(sb, group.substring(0,4) + Character.toUpperCase(group.charAt(4)) + group.substring(5,11) + Character.toUpperCase(group.charAt(11)) + group.substring(12));
+            } else {
+               m.appendReplacement(sb, group.substring(0,4) + Character.toUpperCase(group.charAt(4)) + group.substring(5));
+            }
         }
         m.appendTail(sb);
         
@@ -291,11 +280,9 @@ public class AppMain extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConvert;
     private javax.swing.JButton btnInput;
-    private javax.swing.JButton btnOutput;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField tfInPath;
-    private javax.swing.JTextField tfOutPath;
     private javax.swing.JTextArea txtLog;
     // End of variables declaration//GEN-END:variables
 
